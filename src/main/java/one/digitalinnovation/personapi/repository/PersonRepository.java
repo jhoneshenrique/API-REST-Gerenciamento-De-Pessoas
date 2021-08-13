@@ -1,5 +1,6 @@
 package one.digitalinnovation.personapi.repository;
 
+import one.digitalinnovation.personapi.dto.request.PersonDTO;
 import one.digitalinnovation.personapi.entity.Person;
 import org.springframework.data.jpa.repository.JpaRepository;
 
