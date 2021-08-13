@@ -10,6 +10,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Service
 public class PersonService {
     private PersonRepository personRepository;
@@ -28,6 +31,13 @@ public class PersonService {
         Person savedPerson = personRepository.save(personToSave);
 
         return MessageResponseDTO.builder().message("Created person with ID: "+savedPerson.getId()).build();
+    }
 
+
+    public List<PersonDTO> listAll() {
+        List<Person> people = personRepository.findAll();
+        return people.stream()
+                .map(personMapper::toDTO)
+                .collect(Collectors.toList());
     }
 }
