@@ -7,6 +7,7 @@ import one.digitalinnovation.personapi.exception.PersonNotFoundEception;
 import one.digitalinnovation.personapi.mapper.PersonMapper;
 import one.digitalinnovation.personapi.repository.PersonRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.PermissionDeniedDataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -44,11 +45,21 @@ public class PersonService {
     }
 
     public PersonDTO findById(Long id) throws PersonNotFoundEception {
-        Person person =  personRepository.findById(id).orElseThrow(()->new PersonNotFoundEception(id));
+        Person person =  verifyIfExists(id);
         //Optional<Person> optionalPerson = personRepository.findById(id);
 //        if(optionalPerson.isEmpty()){
 //            throw new PersonNotFoundEception(id);
 //        }
         return personMapper.toDTO(person);
+    }
+
+    public void delete(Long id) throws PersonNotFoundEception {
+        verifyIfExists(id);
+
+        personRepository.deleteById(id);
+    }
+
+    private Person verifyIfExists(Long id) throws PersonNotFoundEception {
+        return personRepository.findById(id).orElseThrow(() -> new PersonNotFoundEception(id));
     }
 }
